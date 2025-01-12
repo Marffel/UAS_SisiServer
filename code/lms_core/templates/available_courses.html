@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Available Courses</title>
+    <style>
+      /* Global Styles */
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #1a202c;
+        color: #edf2f7;
+      }
+
+      header {
+        background-color: #2d3748;
+        color: #edf2f7;
+        padding: 1.5rem;
+        text-align: center;
+      }
+
+      header h1 {
+        margin: 0;
+        font-size: 2rem;
+      }
+
+      main {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+        max-width: 900px;
+        margin: 2rem auto;
+        padding: 1.5rem;
+        background: #2d3748;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+        border-radius: 10px;
+      }
+
+      .course-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+        list-style: none;
+        padding: 0;
+      }
+
+      .course-list li {
+        padding: 1.5rem;
+        background-color: #1a202c;
+        border: 1px solid #4a5568;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      .course-list h3 {
+        margin: 0 0 0.5rem;
+        font-size: 1.5rem;
+        color: #63b3ed;
+      }
+
+      .course-list p {
+        margin: 0.5rem 0;
+        color: #a0aec0;
+      }
+
+      .btn {
+        margin-top: auto;
+        display: inline-block;
+        padding: 0.5rem 1rem;
+        background-color: #3182ce;
+        color: #edf2f7;
+        border: none;
+        border-radius: 5px;
+        text-decoration: none;
+        font-size: 1rem;
+        cursor: pointer;
+        font-weight: bold;
+        text-align: center;
+      }
+
+      .btn:hover {
+        background-color: #2b6cb0;
+      }
+
+      .btn-back {
+        align-self: flex-start;
+        background-color: #3182ce;
+      }
+
+      .btn-back:hover {
+        background-color: #2b6cb0;
+      }
+
+      p {
+        text-align: center;
+        color: #a0aec0;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Available Courses</h1>
+    </header>
+    <main>
+      {% if available_courses %}
+      <ul class="course-list">
+        {% for course in available_courses %}
+        <li>
+          <h3>{{ course.name }}</h3>
+          <p>{{ course.description }}</p>
+          <p><strong>Price:</strong> ${{ course.price }}</p>
+          <form method="POST" action="{% url 'add_bookmark' %}">
+            {% csrf_token %}
+            <input type="hidden" name="content_id" value="{{ course.id }}" />
+            <button type="submit" class="btn">Add Bookmark</button>
+          </form>
+        </li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p>No courses available at the moment.</p>
+      {% endif %}
+      <a href="{% url 'user_dashboard' %}" class="btn btn-back"
+        >Back to Dashboard</a
+      >
+    </main>
+  </body>
+</html>

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Your Bookmarks</title>
+    <style>
+      /* Global Styles */
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #1a202c;
+        color: #edf2f7;
+      }
+
+      header {
+        background-color: #2d3748;
+        color: #edf2f7;
+        padding: 1.5rem;
+        text-align: center;
+      }
+
+      header h1 {
+        margin: 0;
+        font-size: 2rem;
+      }
+
+      main {
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 1.5rem;
+        background: #2d3748;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+        border-radius: 10px;
+      }
+
+      ul {
+        list-style: none;
+        padding: 0;
+      }
+
+      ul li {
+        background-color: #1a202c;
+        margin: 1rem 0;
+        padding: 1rem;
+        border: 1px solid #4a5568;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+      }
+
+      ul li h3 {
+        margin: 0 0 0.5rem;
+        font-size: 1.25rem;
+        color: #63b3ed;
+      }
+
+      ul li p {
+        margin: 0 0 1rem;
+        color: #a0aec0;
+      }
+
+      .btn {
+        display: inline-block;
+        padding: 0.5rem 1rem;
+        background-color: #3182ce;
+        color: #edf2f7;
+        border: none;
+        border-radius: 5px;
+        text-decoration: none;
+        font-size: 1rem;
+        cursor: pointer;
+        font-weight: bold;
+      }
+
+      .btn:hover {
+        background-color: #2b6cb0;
+      }
+
+      .btn-delete {
+        background-color: #e53e3e;
+      }
+
+      .btn-delete:hover {
+        background-color: #c53030;
+      }
+
+      .btn-back {
+        margin-top: 1rem;
+        background-color: #3182ce;
+      }
+
+      .btn-back:hover {
+        background-color: #2b6cb0;
+      }
+
+      .btn-available {
+        margin-top: 1rem;
+        background-color: #48bb78;
+      }
+
+      .btn-available:hover {
+        background-color: #38a169;
+      }
+
+      p {
+        text-align: center;
+        color: #a0aec0;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Your Bookmarks</h1>
+    </header>
+    <main>
+      {% if bookmarks %}
+      <ul>
+        {% for bookmark in bookmarks %}
+        <li>
+          <h3>{{ bookmark.content.name }}</h3>
+          <p>Course: <strong>{{ bookmark.content.course_id.name }}</strong></p>
+          <form method="POST" action="{% url 'delete_bookmark' bookmark.id %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-delete">
+              Remove Bookmark
+            </button>
+          </form>
+        </li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p>You have no bookmarks yet.</p>
+      {% endif %}
+      <a href="{% url 'user_dashboard' %}" class="btn btn-back"
+        >Back to Dashboard</a
+      >
+      <a href="{% url 'available_courses' %}" class="btn btn-available"
+        >View Available Courses</a
+      >
+    </main>
+  </body>
+</html>

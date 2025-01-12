@@ -1,42 +1,171 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Comments for {{ content.name }}</title>
-    <link rel="stylesheet" href="/static/css/style.css">
-</head>
-<body>
+    <style>
+      /* Global Styles */
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        background-color: #1a202c;
+        color: #edf2f7;
+      }
+
+      header {
+        background-color: #2d3748;
+        padding: 20px;
+        text-align: center;
+        color: #edf2f7;
+      }
+
+      header h1 {
+        margin: 0;
+        font-size: 2.5rem;
+      }
+
+      header p {
+        margin: 10px 0;
+        font-size: 1rem;
+      }
+
+      header .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #63b3ed;
+        color: #1a202c;
+        text-decoration: none;
+        border-radius: 5px;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
+      }
+
+      header .btn:hover {
+        background-color: #4299e1;
+      }
+
+      main {
+        margin: 20px auto;
+        width: 90%;
+        max-width: 800px;
+        background: #2d3748;
+        color: #edf2f7;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+        padding: 20px;
+      }
+
+      section h2 {
+        margin-bottom: 15px;
+        color: #63b3ed;
+        border-bottom: 2px solid #4299e1;
+        padding-bottom: 5px;
+      }
+
+      ul {
+        list-style: none;
+        padding: 0;
+      }
+
+      ul li {
+        background: #1a202c;
+        margin-bottom: 15px;
+        border: 1px solid #4a5568;
+        border-radius: 5px;
+        padding: 15px;
+      }
+
+      ul li p {
+        margin: 5px 0;
+      }
+
+      ul li p strong {
+        font-size: 1.1rem;
+        color: #63b3ed;
+      }
+
+      ul li form {
+        margin-top: 10px;
+      }
+
+      .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #3182ce;
+        color: #edf2f7;
+        text-decoration: none;
+        border-radius: 5px;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
+      }
+
+      .btn:hover {
+        background-color: #2b6cb0;
+      }
+
+      .btn-approve {
+        background-color: #38a169;
+      }
+
+      .btn-approve:hover {
+        background-color: #2f855a;
+      }
+
+      .btn-unapprove {
+        background-color: #e53e3e;
+      }
+
+      .btn-unapprove:hover {
+        background-color: #c53030;
+      }
+    </style>
+  </head>
+  <body>
     <header>
-        <h1>Comments for Content: {{ content.name }}</h1>
-        <p><strong>Course:</strong> {{ content.course_id.name }}</p>
-        <a href="{% url 'teacher_dashboard' %}" class="btn">Back to Dashboard</a>
+      <h1>Comments for Content: {{ content.name }}</h1>
+      <p><strong>Course:</strong> {{ content.course_id.name }}</p>
+      <a href="{% url 'teacher_dashboard' %}" class="btn">Back to Dashboard</a>
     </header>
 
     <main>
-        <section>
-            <h2>Comments</h2>
-            <ul>
-                {% for comment in comments %}
-                <li>
-                    <p><strong>{{ comment.member_id.user_id.username }}</strong>: {{ comment.comment }}</p>
-                    <p>
-                        <small>Posted on: {{ comment.created_at|date:"Y-m-d H:i" }}</small>
-                    </p>
-                    {% if user == content.course_id.teacher %}
-                    <form method="POST" action="{% url 'moderate_comment' comment.id %}" style="display:inline;">
-                        {% csrf_token %}
-                        <button type="submit" class="btn">
-                            {% if comment.is_approved %} Unapprove {% else %} Approve {% endif %}
-                        </button>
-                    </form>
-                    {% endif %}
-                </li>
-                {% empty %}
-                <li>No comments available for this content.</li>
-                {% endfor %}
-            </ul>
-        </section>
+      <section>
+        <h2>Comments</h2>
+        <ul>
+          {% for comment in comments %}
+          <li>
+            <p>
+              <strong>{{ comment.member_id.user_id.username }}</strong>: {{
+              comment.comment }}
+            </p>
+            <p>
+              <small
+                >Posted on: {{ comment.created_at|date:"Y-m-d H:i" }}</small
+              >
+            </p>
+            {% if user == content.course_id.teacher %}
+            <form
+              method="POST"
+              action="{% url 'moderate_comment' comment.id %}"
+              style="display: inline"
+            >
+              {% csrf_token %}
+              <button
+                type="submit"
+                class="btn {% if comment.is_approved %}btn-unapprove{% else %}btn-approve{% endif %}"
+              >
+                {% if comment.is_approved %} Unapprove {% else %} Approve {%
+                endif %}
+              </button>
+            </form>
+            {% endif %}
+          </li>
+          {% empty %}
+          <li>No comments available for this content.</li>
+          {% endfor %}
+        </ul>
+      </section>
     </main>
-</body>
+  </body>
 </html>
